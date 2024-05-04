@@ -1,0 +1,35 @@
+﻿@page "/TodoList"
+<h3>TodoList</h3>
+<button class="btn btn-primary" @onclick="OnAddTaskClickrd">Create Task</button>
+<PageTitle>TodoList</PageTitle>
+
+@foreach (var t in Items)
+{
+    <TodoItemView todo="t"></TodoItemView>
+   
+}
+
+
+@code{
+    public List<TodoItem> Items { get; set; }
+    [Inject] public NavigationManager manager { get; set; }
+    [Inject] public IDbContextFactory<TodoContext> factory
+    {
+        get;
+        set;
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var context = factory.CreateDbContext();
+        Items = context.todoItems.ToList();
+    }
+
+    public void OnAddTaskClickrd()
+    {
+        manager.NavigateTo("TodoCreate/create");
+    }
+}
+
+
